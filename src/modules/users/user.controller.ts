@@ -1,30 +1,32 @@
-import { Controller, Patch, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Patch, Body, Param, UseInterceptors, UploadedFile, Get, UseGuards, Req } from '@nestjs/common';
 import { UploadsService } from '../uploads/uploads.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import * as admin from 'firebase-admin';
+import { FirebaseAuthGuard } from '../auth/guards/auth.guard';
+import { UserService } from './user.service';
+import { UpdateProfileDto } from './dtos/update_profile.dto';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
-  constructor(private readonly uploadsService: UploadsService) {}
+  constructor(
+    private readonly userService: UserService
+  ) {}
 
-  @Patch('update/:uid')
-  @UseInterceptors(FileInterceptor('image'))
+  @Patch('/update/me')
+  @UseInterceptors(FileInterceptor('imageUrl'))
+  @UseGuards(FirebaseAuthGuard)
   async updateProfile(
-    @Param('uid') uid: string,
-    @Body() updateData: any,
+    @Req() req,
+    @Body() updateData: UpdateProfileDto,
     @UploadedFile() file: any
   ) {
-    let photoUrl = updateData.profilePicture;
+    const uid = req.user.uid;
+    return await this.userService.updateProfile(uid, updateData, file);
+  }
 
-    if (file) {
-      photoUrl = await this.uploadsService.uploadFile(file, uid);
-    }
-
-    await admin.firestore().collection('users').doc(uid).update({
-      ...updateData,
-      profilePicture: photoUrl,
-    });
-
-    return { message: 'Profile Updated', photoUrl };
+  @Get('/me')
+  @UseGuards(FirebaseAuthGuard)
+  async getProfile(@Req() req) {
+    const userId = req.user.uid;
+    return await this.userService.getProfile(userId);
   }
 }

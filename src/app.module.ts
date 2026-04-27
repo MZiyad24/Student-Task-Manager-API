@@ -5,6 +5,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { HealthController } from './firebase/firebase.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './modules/users/user.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     FirebaseModule,
-    AuthModule
+    AuthModule,
+    UserModule
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
