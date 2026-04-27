@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from '../auth/dtos/signup.dto';

@@ -1,5 +1,3 @@
-// src/auth/auth.service.ts
-
 import { Injectable } from "@nestjs/common/decorators/core/injectable.decorator";
 import { SignupDto } from "./dtos/signup.dto";
 import { BadRequestException } from "@nestjs/common/exceptions/bad-request.exception";
