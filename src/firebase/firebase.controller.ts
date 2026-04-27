@@ -1,4 +1,3 @@
-// src/health/health.controller.ts
 import { Controller, Get } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 
@@ -16,7 +15,7 @@ export class HealthController {
     } catch (error) {
       return {
         status: 'error',
-        message: error,
+        message: error.message,
       };
     }
   }
