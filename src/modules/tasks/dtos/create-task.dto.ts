@@ -6,13 +6,13 @@ export class CreateTaskDto {
   title!: string;
 
   @IsOptional()
-  description!: string;
+  description?: string;
 
   @IsDateString()
   dueDate!: string;
 
   @IsEnum(['Low', 'Medium', 'High'])
-  priority!: string;
+  priority?: string;
 
-  userId!: string;
+
 }
