@@ -13,9 +13,10 @@ export class UploadsService {
       metadata: { contentType: file.mimetype },
     });
 
+    console.log(`File uploaded to Firebase Storage: ${fileName}`);
     const [url] = await fileUpload.getSignedUrl({
       action: 'read',
-      expires: '01-01-2050',
+      expires: new Date(Date.now() + 60 * 60 * 1000),
     });
     return url;
   }

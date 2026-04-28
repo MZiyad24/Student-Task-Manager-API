@@ -14,11 +14,18 @@ export class UserService {
         if (!userDoc.exists) {
             throw new NotFoundException('User not found or session expired');
         }
-        const data = userDoc.data();
-        return plainToInstance(UserProfileDto, {
+        const data = userDoc.data()!;
+        return {
         uid: userDoc.id,
-        ...data,
-        }, { excludeExtraneousValues: true });
+        studentId: data.studentId ?? '',
+        email: data.email ?? '',
+        name: data.name ?? '',
+        academicYear: data.academicLevel ?? '',
+        gender: data.gender ?? '',
+        profilePicture: data.profilePicture ?? null,
+        // Convert Firestore Timestamps to Strings if they exist
+        createdAt: data.createdAt?.toDate?.()?.toISOString() ?? null,
+    };
     }
 
     async updateProfile(uid: string, updateData: UpdateProfileDto, file: any) {

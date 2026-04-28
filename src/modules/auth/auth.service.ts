@@ -2,15 +2,17 @@ import { Injectable } from "@nestjs/common/decorators/core/injectable.decorator"
 import { SignupDto } from "./dtos/signup.dto";
 import { BadRequestException } from "@nestjs/common/exceptions/bad-request.exception";
 import * as admin from 'firebase-admin';
-import { NotFoundException } from "@nestjs/common/exceptions/not-found.exception";
+import { ConfigService } from "@nestjs/config";
 import { LoginDto } from "./dtos/login.dto";
 import axios from 'axios';
 import { UnauthorizedException } from "@nestjs/common/exceptions/unauthorized.exception";
 
 @Injectable()
 export class AuthService {
-  private readonly FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
+  constructor(private configService: ConfigService) {}
+  
   async signup(dto: SignupDto) {
+    console.log('api key', this.configService.get('FIREBASE_API_KEY'));
     if (dto.password !== dto.confirmPassword) {
       throw new BadRequestException('Passwords do not match');
     }
@@ -36,8 +38,8 @@ export class AuthService {
       name: dto.name,
       email: dto.email,
       studentId: dto.studentId,
-      gender: dto.gender,
-      academicLevel: dto.academicLevel,
+      gender: dto.gender || null,
+      academicLevel: dto.academicLevel || null,
     });
 
     return await this.generateToken(dto.email, dto.password);
@@ -57,7 +59,7 @@ export class AuthService {
       return {
         ...authData,
         user: {
-          Name: userData?.Name,
+          name: userData?.name,
           studentId: userData?.studentId,
           gender: userData?.gender,
           academicLevel: userData?.academicLevel,
@@ -70,12 +72,12 @@ export class AuthService {
         error.code === 'auth/user-not-found') {
         throw new UnauthorizedException('Invalid email or password');
       }
-      throw new UnauthorizedException('Authentication failed');
+      throw new UnauthorizedException('Invalid login credentials');
     }
   }
 
   private async generateToken(email: string, password: string) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.FIREBASE_API_KEY}`;
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.configService.get('FIREBASE_API_KEY')}`;
 
     try {
       const response = await axios.post(url, {
@@ -85,7 +87,7 @@ export class AuthService {
       });
 
       return {
-        message: 'Signup successful',
+        message: 'successful',
         idToken: response.data.idToken,
         refreshToken: response.data.refreshToken,
         expiresIn: response.data.expiresIn,

@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Patch, Req } from '@nestjs/common';
-import * as admin from 'firebase-admin';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Req } from '@nestjs/common';
 import { TasksService } from './task.service';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { FirebaseAuthGuard } from '../auth/guards/auth.guard';
