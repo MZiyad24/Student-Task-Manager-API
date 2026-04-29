@@ -17,6 +17,7 @@ export class TasksService {
         dueDate: admin.firestore.Timestamp.fromDate(new Date(dto.dueDate)),
         priority: dto.priority,
         isCompleted: false,
+        isFavorite: false,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
@@ -38,12 +39,13 @@ export class TasksService {
       return {
         id: doc.id,
         ...data,
+        isFavorite: data.isFavorite ?? false,
         dueDate: (data.dueDate as admin.firestore.Timestamp).toDate().toISOString(),
       };
     });
   }
 
-  async updateTask(taskId: string, updates: Partial<CreateTaskDto & { isCompleted: boolean }>): Promise<void> {
+  async updateTask(taskId: string, updates: Partial<CreateTaskDto & { isCompleted: boolean; isFavorite?: boolean }>): Promise<void> {
     const docRef = this.collection.doc(taskId);
     const doc = await docRef.get();
 

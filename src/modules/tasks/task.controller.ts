@@ -15,6 +15,17 @@ export class TasksController {
     return this.tasksService.addTask( {...dto}, uid );
   }
 
+
+//   @Post('add')
+// @UseGuards(FirebaseAuthGuard)
+// create(@Body() dto: CreateTaskDto, @Req() req) {
+//   console.log("🔥 CREATE HIT");
+//   console.log("UID:", req.user?.uid);
+//   console.log("DTO:", dto);
+
+//   return this.tasksService.addTask({ ...dto }, req.user.uid);
+// }
+
   @Get()
   @UseGuards(FirebaseAuthGuard)
   findAll(@Req() req) {
@@ -39,4 +50,14 @@ export class TasksController {
   mark(@Param('id') id: string, @Body('isCompleted') isCompleted: boolean) {
     return this.tasksService.toggleTaskStatus(id, isCompleted);
   }
+
+  @Patch('/favorite/:id')
+  @UseGuards(FirebaseAuthGuard)
+  toggleFavorite(
+     @Param('id') id: string,
+     @Body('isFavorite') isFavorite: boolean,
+) {
+  return this.tasksService.updateTask(id, { isFavorite });
+}
+
 }
