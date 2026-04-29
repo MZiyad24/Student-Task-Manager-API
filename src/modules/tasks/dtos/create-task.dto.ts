@@ -14,5 +14,7 @@ export class CreateTaskDto {
   @IsEnum(['Low', 'Medium', 'High'])
   priority?: string;
 
+  @IsOptional()
+  isCompleted?: boolean;
 //   isFavorite?: boolean;
  }

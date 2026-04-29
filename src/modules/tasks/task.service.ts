@@ -40,6 +40,7 @@ export class TasksService {
         id: doc.id,
         ...data,
         isFavorite: data.isFavorite ?? false,
+        isCompleted: data.isCompleted ?? false,
         dueDate: (data.dueDate as admin.firestore.Timestamp).toDate().toISOString(),
       };
     });

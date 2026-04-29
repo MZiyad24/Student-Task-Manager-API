@@ -16,16 +16,6 @@ export class TasksController {
   }
 
 
-//   @Post('add')
-// @UseGuards(FirebaseAuthGuard)
-// create(@Body() dto: CreateTaskDto, @Req() req) {
-//   console.log("🔥 CREATE HIT");
-//   console.log("UID:", req.user?.uid);
-//   console.log("DTO:", dto);
-
-//   return this.tasksService.addTask({ ...dto }, req.user.uid);
-// }
-
   @Get()
   @UseGuards(FirebaseAuthGuard)
   findAll(@Req() req) {

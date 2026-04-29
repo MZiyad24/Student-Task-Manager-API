@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/users/user.module';
 import { TasksModule } from './modules/tasks/task.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TasksModule } from './modules/tasks/task.module';
     AuthModule,
     UserModule,
     TasksModule,
+    UploadsModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
