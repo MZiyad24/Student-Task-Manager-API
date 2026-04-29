@@ -6,8 +6,8 @@ export class UpdateProfileDto {
   name?: string;
 
   
-  // @IsOptional()
-  // imageUrl?: File;
+  @IsOptional()
+  profilePicture?: string;
 
   @IsOptional()
   @Min(1, { message: 'Academic level must be at least 1' })

@@ -1,23 +1,25 @@
-// src/uploads/uploads.service.ts
 import { Injectable } from '@nestjs/common';
-import * as admin from 'firebase-admin';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UploadsService {
+  
   async uploadFile(file: any, folder: string): Promise<string> {
-    const bucket = admin.storage().bucket();
-    const fileName = `${folder}/${Date.now()}_${file.originalname}`;
-    const fileUpload = bucket.file(fileName);
+    // 1. Define the base path (e.g., ./uploads/profile_pics)
+    const uploadPath = path.join(process.cwd(), 'uploads', folder);
+  
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const fileName = `${uniqueSuffix}${path.extname(file.originalname)}`;
+    const fullPath = path.join(uploadPath, fileName);
 
-    await fileUpload.save(file.buffer, {
-      metadata: { contentType: file.mimetype },
-    });
+    fs.writeFileSync(fullPath, file.buffer);
 
-    console.log(`File uploaded to Firebase Storage: ${fileName}`);
-    const [url] = await fileUpload.getSignedUrl({
-      action: 'read',
-      expires: new Date(Date.now() + 60 * 60 * 1000),
-    });
-    return url;
+    console.log(`File saved locally to: ${fullPath}`);
+
+    return `http://localhost:3000/uploads/${folder}/${fileName}`;
   }
 }
